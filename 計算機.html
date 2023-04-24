@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>計算機</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Delicious+Handrawn&family=Inconsolata:wght@200;300;400;500;600&family=Noto+Sans+TC:wght@100;300;400;500;700;900&family=Press+Start+2P&display=swap"
+    rel="stylesheet">
+  <style>
+    html,
+    body {
+      height: 100%;
+
+    }
+
+    body {
+      margin: 0;
+      background: url('https://wallpaperset.com/w/full/3/2/d/534561.jpg') no-repeat center center;
+      background-size: 100% 100%;
+    }
+
+    #btn-history {
+      position: absolute;
+      top: 50px;
+      left: 100px;
+      width: 400px;
+      height: 30px;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.3);
+      border: none;
+      color: white;
+      font-size: 16px;
+      box-shadow: 0px 0px 15px black;
+      transition: 1s;
+    }
+
+    #btn-history:hover {
+      background: rgba(0, 0, 0, 0.7);
+
+    }
+
+    #history {
+      position: absolute;
+      top: 80px;
+      left: 100px;
+      width: 400px;
+      height: 585px;
+      overflow-y: scroll;
+      backdrop-filter: saturate(180%) blur(10px);
+      box-shadow: 0px 0px 15px black;
+
+    }
+
+    table {
+      vertical-align: middle;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-spacing: 0;
+      /* background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)); */
+      /* filter: blur(1px); */
+      /* background: inherit; */
+      backdrop-filter: saturate(180%) blur(10px);
+      box-shadow: 0px 0px 15px black;
+      width: 400px;
+      height: 600px;
+      table-layout: fixed;
+    }
+
+    td {
+      width: 100px;
+      height: 100px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 50px;
+      font-family: 'Press Start 2P', cursive;
+      transition: 1s;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -o-user-select: none;
+      user-select: none;
+    }
+
+    #text {
+      padding-top: 15px;
+      white-space: nowrap;
+      overflow-x: scroll;
+    }
+
+    #top {
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: saturate(150%) blur(10px);
+    }
+
+    tr:nth-child(n+2) td:nth-child(n):hover {
+      background: lightseagreen;
+      color: brown;
+      transform: scale(1.1);
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.7);
+
+    }
+
+    #text {
+      text-align: right;
+    }
+
+
+    ::-webkit-scrollbar {
+      width: 20px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #d6dee1;
+      border-radius: 20px;
+      border: 6px solid transparent;
+      background-clip: content-box;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #a8bbbf;
+    }
+
+    #historyDiv {
+      display: none;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      color: white;
+      padding-top: 10px;
+      padding-left: 10px;
+      font-size: 30px;
+    }
+
+    #btnDel {
+      margin: 0;
+      padding: 0;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 25px;
+      transition: 0.5s;
+    }
+
+    #btnDel:hover {
+      /* color: rgba(255, 0, 0, 1); */
+      color: rgba(255, 0, 0, 0.7);
+      transform: scale(1.1);
+      text-shadow: 0px 0px 5px black;
+    }
+  </style>
+</head>
+
+<body>
+  <audio id="start" src="./TheSoundofRain.mp3" loop autoplay></audio>
+  <input type="button" value="點擊獲得歷史紀錄" id="btn-history">
+
+  <div id="historyDiv" name="0">
+    <ul id="history">
+
+    </ul>
+  </div>
+  <div>
+    <table>
+      <tr id="top" style="overflow: auto;">
+        <td colspan="4" id="text">0</td>
+      </tr>
+      <tr>
+        <td>C</td>
+        <td>/</td>
+        <td>*</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td rowspan="2">+</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td rowspan="2">=</td>
+      </tr>
+      <tr>
+        <td colspan="2">0</td>
+        <td>.</td>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+    const start = document.getElementById('start')
+    const text = document.getElementById('text')
+    const btns = document.querySelectorAll('td:not(#text)')
+    const history = document.getElementById('history')
+    const btnHistory = document.getElementById('btn-history')
+    const historyDiv = document.getElementById('historyDiv')
+    const btnDels = document.querySelectorAll('#btnDel')
+    for (const btn of btns) {
+      btn.addEventListener('click', () => {
+        const btnText = btn.innerText
+        const operators = ['+', '-', '*', '/']
+        const lastText = text.innerText[text.innerText.length - 1]
+        start.play()
+        // 如果按的鍵是 =
+        if (btnText === '=') {
+          // 如果最後一個字不是運算子，才計算
+          if (!operators.includes(lastText)) {
+            // 在歷史紀錄新增資訊
+            history.innerHTML += `<li><input type="button" value="X" id="btnDel" onclick="del(this)"> ${text.innerText} = ${eval(text.innerText)}</li>`
+            text.innerText = eval(text.innerText)
+          }
+        }
+        // 如果按 C，歸 0
+        else if (btnText === 'C') {
+          text.innerText = '0'
+        }
+        // 如果現在是 0，按的是數字，把文字取代
+        else if (text.innerText === '0' && !isNaN(parseInt(btnText))) {
+          text.innerText = btnText
+        }
+        // 如果最後一個字是運算子
+        else if (operators.includes(lastText)) {
+          // 現在按的不是運算子，才加上去
+          if (!operators.includes(btnText)) {
+            text.innerText += btnText
+          }
+        }
+        // 如果按的是 .
+        else if (btnText === '.') {
+          let canAddDot = true
+          // 從最後一個字往前跑迴圈
+          for (let i = text.innerText.length - 1; i >= 0; i--) {
+            // 如果先遇到運算子，一定可以加 .
+            if (operators.includes(text.innerText[i])) break
+            // 如果先遇到 .，一定不能加 .
+            if (text.innerText[i] === '.') {
+              canAddDot = false
+              break
+            }
+          }
+          // 迴圈完可以加才
+          if (canAddDot) text.innerText += '.'
+        }
+        // 如果最後一個字不是運算子，加上去
+        else {
+          text.innerText += btnText
+        }
+      })
+    }
+
+    document.addEventListener('keydown', event => {
+      const btnText = event.key
+      const operators = ['+', '-', '*', '/']
+      const lastText = text.innerText[text.innerText.length - 1]
+      // 如果按的鍵是 =
+      if (btnText === '=' || btnText === 'Enter') {
+        // 如果最後一個字不是運算子，才計算
+        if (!operators.includes(lastText)) {
+          // 在歷史紀錄新增資訊
+          history.innerHTML += `<li><input type="button" value="X" id="btnDel" onclick="del(this)"> ${text.innerText} = ${eval(text.innerText)}</li>`
+          text.innerText = eval(text.innerText)
+        }
+      }
+      // 如果按 C，歸 0
+      else if (btnText === 'c') {
+        text.innerText = '0'
+      }
+      // 如果現在是 0，按的是數字，把文字取代
+      else if (text.innerText === '0' && !isNaN(parseInt(btnText))) {
+        text.innerText = btnText
+      }
+      // 如果最後一個字是運算子
+      else if (operators.includes(lastText)) {
+        // 現在按的不是運算子，且是數字才加上去
+        if (!operators.includes(btnText) && !isNaN(parseInt(btnText))) {
+          text.innerText += btnText
+        }
+      }
+      // 如果最後一個字不是運算子，且按的是數字或運算子，加上去
+      else if (!isNaN(parseInt(btnText)) || operators.includes(btnText)) {
+        text.innerText += btnText
+      }
+      // 如果按的是 .
+      else if (btnText === '.') {
+        let canAddDot = true
+        // 從最後一個字往前跑迴圈
+        for (let i = text.innerText.length - 1; i >= 0; i--) {
+          // 如果先遇到運算子，一定可以加 .
+          if (operators.includes(text.innerText[i])) break
+          // 如果先遇到 .，一定不能加 .
+          if (text.innerText[i] === '.') {
+            canAddDot = false
+            break
+          }
+        }
+        // 迴圈完可以加才
+        if (canAddDot) text.innerText += '.'
+      }
+    })
+    // 點擊顯示歷史紀錄
+    btnHistory.addEventListener('click', () => {
+      if (historyDiv.style.display === 'none') {
+        historyDiv.style.display = 'block'
+
+      }
+      else {
+        historyDiv.style.display = 'none'
+      }
+    })
+    function del(element) {
+      element.parentNode.remove()
+    }
+
+
+  </script>
+</body>
+
+</html>
